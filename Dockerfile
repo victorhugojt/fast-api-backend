@@ -1,9 +1,13 @@
 FROM tiangolo/uvicorn-gunicorn:python3.7
 
-WORKDIR /app
+WORKDIR /code
 
-COPY ./requeriments.txt .
-COPY ./api/v1 ./api/v1/
-COPY ./main.py .
+COPY ./requeriments.txt /code/requeriments.txt
+COPY ./setup.py /code/setup.py
+COPY ./app /code/app
 
-RUN pip install -r requeriments.txt
+RUN pip install -r /code/requeriments.txt
+
+EXPOSE 8000
+
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "80"]

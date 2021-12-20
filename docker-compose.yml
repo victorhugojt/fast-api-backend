@@ -1,7 +1,7 @@
 version: '3'
 services:
   greeting_backend:
-    container_name: greeting_backend
-    image: greeting_backend:latest
+    container_name: greetings_backend
+    image: greetings_backend:latest
     ports:
-      - 5000:80
+      - 80:80
