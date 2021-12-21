@@ -5,3 +5,5 @@ services:
     image: greetings_backend:latest
     ports:
       - 80:80
+    environment:
+      NAME: "VictorHJ"
