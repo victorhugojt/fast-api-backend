@@ -1,0 +1,64 @@
+{
+	"info": {
+		"_postman_id": "dab8ea4a-2811-4ef4-8f18-894c60cbd45d",
+		"name": "fastAPIContenerized",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "initial",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:80/",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:80/ping",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"ping"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "greetings",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "localhost:80/hi",
+					"host": [
+						"localhost"
+					],
+					"port": "80",
+					"path": [
+						"hi"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}

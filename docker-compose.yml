@@ -1,7 +1,9 @@
 version: '3'
 services:
   greeting_backend:
-    container_name: greetings_backend
-    image: greetings_backend:latest
+    container_name: greetings-backend
+    image: greetings-backend:latest
     ports:
       - 80:80
+    environment:
+      NAME: "VictorHJ"

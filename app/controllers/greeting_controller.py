@@ -1,4 +1,5 @@
 from fastapi import APIRouter
+import os
 
 router = APIRouter()
 
@@ -14,4 +15,5 @@ async def info():
 
 @router.get("/hi")
 async def greeting():
-    return {"message": "Hello Champion !!!"}
+    name = os.environ['NAME']
+    return {"message": "Hello {} !".format(name)}

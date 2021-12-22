@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: greetings-backend
+spec:
+  selector:
+    matchLabels:
+      app: greetings-backend
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: greetings-backend
+    spec:
+      containers:
+      - name: greetings-backend
+        image: greetings-backend:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
