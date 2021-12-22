@@ -12,5 +12,8 @@ eval $(minikube docker-env)
 
 # Create resources
 kubectl apply -f service.yaml
-kubectl apply -f deployment.yamlss
+kubectl apply -f deployment.yamls
+
+# Use postman collection to test the app
+fastAPIContenerized.postman_collection.json
 
