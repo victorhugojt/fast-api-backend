@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: greetings_backend
 spec:
-  replicas: 1
+  replicas: 4
   selector:
     matchLabels:
       app: greetings_backend
