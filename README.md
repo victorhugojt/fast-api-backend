@@ -26,3 +26,7 @@ minikube tunnel
 # Use postman collection to test the app
 fastAPIContenerized.postman_collection.json
 
+# Debugging
+
+kubectl logs -l app=greetings-backend
+
