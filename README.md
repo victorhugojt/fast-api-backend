@@ -1,3 +1,19 @@
+```sh
+virtualenv venv
+virtualenv -p '/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10' python-3.10
+```
+
+##### Mac
+```sh
+source python-3.10/bin/activate
+```
+
+##### Running Locally for Dev
+
+```sh
+uvicorn app.main:app --reload
+```
+
 # fast-api-backend
 fastAPI self training
 

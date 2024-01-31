@@ -1,12 +1,12 @@
-FROM tiangolo/uvicorn-gunicorn:python3.7
+FROM tiangolo/uvicorn-gunicorn:python3.10
 
 WORKDIR /code
 
-COPY ./requeriments.txt /code/requeriments.txt
+COPY ./requeriments.txt /code/requirements.txt
 COPY ./setup.py /code/setup.py
 COPY ./app /code/app
 
-RUN pip install -r /code/requeriments.txt
+RUN pip install -r /code/requirements.txt
 
 EXPOSE 8000
 
