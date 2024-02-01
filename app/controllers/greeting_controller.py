@@ -3,17 +3,17 @@ import os
 
 router = APIRouter()
 
-@router.get("/")
+@router.get("/", status_code=200)
 async def info():
     return {"message": "Ready"}
 
 
-@router.get("/ping")
+@router.get("/ping", status_code=200)
 async def info():
     return {"pong !"}
 
 
-@router.get("/hi")
+@router.get("/hi", status_code=200)
 async def greeting():
     name = os.environ['NAME']
     return {"message": "Hello {} !".format(name)}

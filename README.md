@@ -62,8 +62,8 @@ UI ===> http://localhost:16686
 
   ##### Running Locally for Dev with Otel
 
-```sh
-opentelemetry-instrument --service_name greeting-service uvicorn app.main:app --reload
+```sh 
+opentelemetry-instrument --traces_exporter console, otlp --metrics_exporter none --exporter_otlp_endpoint http://localhost:4317 --service_name greeting-service uvicorn app.main:app
 ```
 
 # Docs run example
