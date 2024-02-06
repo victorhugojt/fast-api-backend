@@ -78,3 +78,8 @@ opentelemetry-instrument \
 ```
   
 
+
+docker run --name my-prometheus \
+    --mount type=bind,source=./prometheus.yml,destination=/etc/prometheus/prometheus.yml \
+    -p 9090:9090 \
+    prom/prometheus:latest

@@ -2,7 +2,7 @@ FROM tiangolo/uvicorn-gunicorn:python3.10
 
 WORKDIR /code
 
-COPY ./requeriments.txt /code/requirements.txt
+COPY ./requirements.txt /code/requirements.txt
 COPY ./setup.py /code/setup.py
 COPY ./app /code/app
 

@@ -1,9 +1,24 @@
 version: '3'
+
 services:
-  greeting_backend:
+  greetings-backend:
     container_name: greetings-backend
-    image: greetings-backend:latest
+    restart: 'on-failure'
+    # image: greetings-backend:latest
+    build:
+      context: .
+      dockerfile: ./Dockerfile
     ports:
       - 80:80
     environment:
       NAME: "VictorHJ"
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090
