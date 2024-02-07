@@ -21,7 +21,7 @@ fastAPI self training
 docker build -t greetings-backend .
 
 # run docker container locally
-docker-compose up -d
+docker-compose up -d --build
 
 # Use the minikube docker-env for the current session.
 eval $(minikube docker-env)
@@ -60,21 +60,8 @@ fastAPIContenerized.postman_collection.json
 UI ===> http://localhost:16686
 
 
-  ##### Running Locally for Dev with Otel
+  ##### Running Locally for Dev with Otel (works!!)
 
 ```sh 
-opentelemetry-instrument --traces_exporter console, otlp --metrics_exporter none --exporter_otlp_endpoint http://localhost:4317 --service_name greeting-service uvicorn app.main:app
+opentelemetry-instrument --traces_exporter otlp --metrics_exporter none --exporter_otlp_endpoint http://localhost:4317 --service_name greeting-service uvicorn app.main:app
 ```
-
-# Docs run example
-
-```sh
-opentelemetry-instrument \
-    --traces_exporter console,otlp \
-    --metrics_exporter none \
-    --service_name your-service-name \
-    --exporter_otlp_endpoint 0.0.0.0:4317 \
-    python myapp.py
-```
-  
-
