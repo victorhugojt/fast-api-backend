@@ -44,11 +44,17 @@ async def info():
     return {"pong !"}
 
 
+def another_thing_to_do():
+    return "have a good weekend"
+
+
 @router.get("/hi", status_code=200)
 async def greeting():
-    with tracer.start_as_current_span("Greeting Request", attributes={ "requires": "HOME", "library":"FastAPI" } ):
+    with tracer.start_as_current_span("Greeting Request", attributes={ "requires env": "HOME", "library":"FastAPI" } ):
         name = os.environ['NAME']
-        return {"message": "Hello {} !".format(name)}
+        with tracer.start_as_current_span("Child Span"):
+            message = "Hello {} !. {}".format(name, another_thing_to_do())
+            return {"message": message}
 
 
 @router.get("/flip-coins", status_code=200)
