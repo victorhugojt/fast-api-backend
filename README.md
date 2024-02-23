@@ -67,10 +67,12 @@ fastAPIContenerized.postman_collection.json
 
 4317, 4318 ports are the default for open telemetry
 
-UI ===> <http://localhost:16686>
+Jaeger UI ===> <http://localhost:16686>
 
 ####  Running Locally for Dev with Otel (works!!)
 
 ```sh
 opentelemetry-instrument --traces_exporter otlp --metrics_exporter none --exporter_otlp_endpoint http://localhost:4317 --service_name greeting-service uvicorn app.main:app
 ```
+
+Prometheus UI ===> <http://localhost:9090>
