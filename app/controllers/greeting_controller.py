@@ -2,6 +2,22 @@ from fastapi import APIRouter, HTTPException, Response
 import os
 import random
 import prometheus_client
+from opentelemetry import trace
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.sdk.trace import TracerProvider
+# from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.sdk.trace.export import ConsoleSpanExporter
+
+from app.span_utils import custom_processor
+
+# provider = TracerProvider()
+# processor = BatchSpanProcessor(ConsoleSpanExporter())
+# provider.add_span_processor(processor)
+provider = TracerProvider(resource=Resource.create({"service.name": "greetings-service"}))
+processor = custom_processor.MySpanProcessor(span_exporter=ConsoleSpanExporter())
+provider.add_span_processor(span_processor=processor)
+trace.set_tracer_provider(provider)
+tracer = trace.get_tracer(__name__)
 
 
 router = APIRouter()
@@ -28,10 +44,17 @@ async def info():
     return {"pong !"}
 
 
+def another_thing_to_do():
+    return "have a good weekend"
+
+
 @router.get("/hi", status_code=200)
 async def greeting():
-    name = os.environ['NAME']
-    return {"message": "Hello {} !".format(name)}
+    with tracer.start_as_current_span("Greeting Request", attributes={ "requires env": "HOME", "library":"FastAPI" } ):
+        name = os.environ['NAME']
+        with tracer.start_as_current_span("Child Span"):
+            message = "Hello {} !. {}".format(name, another_thing_to_do())
+            return {"message": message}
 
 
 @router.get("/flip-coins", status_code=200)

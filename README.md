@@ -1,36 +1,47 @@
+# FAST API
+
+## Virtual Environments
+
 ```sh
 virtualenv venv
 virtualenv -p '/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10' python-3.10
 ```
 
-##### Mac
+### Mac
+
 ```sh
 source python-3.10/bin/activate
 ```
 
-##### Running Locally for Dev
+###  Running Locally for Dev
 
 ```sh
 uvicorn app.main:app --reload
 ```
 
-# fast-api-backend
+### fast-api-backend
+
 fastAPI self training
 
-# build image
+### build image
+
 docker build -t greetings-backend .
 
-# run docker container locally
+### run docker container locally
+
 docker-compose up -d --build
 
-# Use the minikube docker-env for the current session.
+### Use the minikube docker-env for the current session
+
 eval $(minikube docker-env)
 
-# Create resources
+### Create resources
+
 kubectl apply -f service.yaml
 kubectl apply -f deployment.yamls
 
-# Use postman collection to test the app
+### Use postman collection to test the app
+
 fastAPIContenerized.postman_collection.json
 
 ## Open Telemetry
@@ -56,12 +67,12 @@ fastAPIContenerized.postman_collection.json
 
 4317, 4318 ports are the default for open telemetry
 
+Jaeger UI ===> <http://localhost:16686>
 
-UI ===> http://localhost:16686
+####  Running Locally for Dev with Otel (works!!)
 
-
-  ##### Running Locally for Dev with Otel (works!!)
-
-```sh 
+```sh
 opentelemetry-instrument --traces_exporter otlp --metrics_exporter none --exporter_otlp_endpoint http://localhost:4317 --service_name greeting-service uvicorn app.main:app
 ```
+
+Prometheus UI ===> <http://localhost:9090>
