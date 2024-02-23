@@ -2,11 +2,12 @@ from fastapi import APIRouter, HTTPException, Response
 import os
 import random
 import prometheus_client
-from opentelemetry import trace
+from opentelemetry import trace, baggage
 from opentelemetry.sdk.resources import Resource
 from opentelemetry.sdk.trace import TracerProvider
 # from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.trace.export import ConsoleSpanExporter
+from opentelemetry.context import attach, detach
 
 from app.span_utils import custom_processor
 
@@ -50,11 +51,28 @@ def another_thing_to_do():
 
 @router.get("/hi", status_code=200)
 async def greeting():
+    user = attach(
+        baggage.set_baggage("user.id", "Pibe Valderrama")
+    )
     with tracer.start_as_current_span("Greeting Request", attributes={ "requires env": "HOME", "library":"FastAPI" } ):
+        parent_context = baggage.set_baggage("position", "10")
         name = os.environ['NAME']
-        with tracer.start_as_current_span("Child Span"):
+        with tracer.start_as_current_span("Child Span", context=parent_context):
+            child_context = baggage.set_baggage("matches", "467")
             message = "Hello {} !. {}".format(name, another_thing_to_do())
+            print("-------------------------------------------------------")
+            print(baggage.get_baggage("user.id", parent_context))
+            print(baggage.get_baggage("position", parent_context))
+            print("-------------------------------------------------------")
+            print(baggage.get_baggage("matches", child_context))
+            print(baggage.get_baggage("user.id", child_context))
+            print("-------------------------------------------------------")
+
+            detach(user)
+
             return {"message": message}
+    
+    
 
 
 @router.get("/flip-coins", status_code=200)
