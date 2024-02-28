@@ -1,34 +1,39 @@
 receivers:
   otlp:
     protocols:
-      grpc:
-        endpoint: 0.0.0.0:4317
       http:
         endpoint: 0.0.0.0:4318
+      grpc:
+        endpoint: 0.0.0.0:4317
+
 processors:
-  batch:
 
 exporters:
-  otlp:
-    endpoint: otelcol:4317
+  prometheus:
+    endpoint: "0.0.0.0:8889"
+    send_timestamps: true
+    namespace: otel
+    const_labels:
+      via: collector
+
+  jaeger:
+    endpoint: jaeger:14250
+    tls:
+      insecure: true
+
 
 extensions:
   health_check:
-  pprof:
-  zpages:
 
 service:
-  extensions: [health_check, pprof, zpages]
+  extensions: [health_check]
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp]
+      processors: []
+      exporters: [jaeger]
     metrics:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp]
-    logs:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp]
+      processors: []
+      exporters: [prometheus]
+
