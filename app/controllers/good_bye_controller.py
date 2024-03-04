@@ -10,18 +10,19 @@ from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExp
 from opentelemetry.sdk.metrics import MeterProvider
 from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 
-# Service name is required for most backends
 resource = Resource(attributes={
-    SERVICE_NAME: "your-service-name"
+    SERVICE_NAME: "greeting-service"
 })
 
-traceProvider = TracerProvider(resource=resource)
-processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="<traces-endpoint>/v1/traces"))
-traceProvider.add_span_processor(processor)
-trace.set_tracer_provider(traceProvider)
 
-reader = PeriodicExportingMetricReader(
-    OTLPMetricExporter(endpoint="<traces-endpoint>/v1/metrics")
+trace_provider = TracerProvider(resource=resource)
+processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="collector:4318/v1/traces"))
+trace_provider.add_span_processor(processor)
+trace.set_tracer_provider(trace_provider)
+
+
+metric_reader = PeriodicExportingMetricReader(
+    OTLPMetricExporter(endpoint="collector:4318/v1/metrics")
 )
-meterProvider = MeterProvider(resource=resource, metric_readers=[reader])
-metrics.set_meter_provider(meterProvider)
+meter_provider = MeterProvider(resource=resource, metric_readers=[metric_reader])
+metrics.set_meter_provider(meter_provider)
