@@ -71,8 +71,6 @@ async def greeting():
             detach(user)
 
             return {"message": message}
-    
-    
 
 
 @router.get("/flip-coins", status_code=200)
