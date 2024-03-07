@@ -30,7 +30,7 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: []
+      processors: [batch]
       exporters: [otlp/jaeger]
     
     metrics:
