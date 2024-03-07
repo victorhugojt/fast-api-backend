@@ -23,7 +23,7 @@ resource = Resource(attributes={
 
 # Traces Exporter Setup
 trace_provider = TracerProvider(resource=resource)
-processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="collector:4318/v1/traces"))
+processor = BatchSpanProcessor(OTLPSpanExporter(endpoint="http://collector:4318/v1/traces"))
 trace_provider.add_span_processor(processor)
 trace.set_tracer_provider(trace_provider)
 tracer = trace.get_tracer(__name__)
@@ -31,7 +31,7 @@ tracer = trace.get_tracer(__name__)
 
 # Metrics Exporter Setup
 metric_reader = PeriodicExportingMetricReader(
-    OTLPMetricExporter(endpoint="collector:4318/v1/metrics")
+    OTLPMetricExporter(endpoint="http://collector:4318/v1/metrics")
 )
 meter_provider = MeterProvider(resource=resource, metric_readers=[metric_reader])
 metrics.set_meter_provider(meter_provider)
