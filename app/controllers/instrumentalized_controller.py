@@ -75,7 +75,7 @@ async def greeting():
             return {"message": message}
 
 
-def message():
+def get_message():
     return "have a good weekend"
 
 
@@ -93,7 +93,7 @@ async def goodbye():
         
         with tracer.start_as_current_span("Child Span", context=parent_context):
             child_context = baggage.set_baggage("role", "Performance Engineer")
-            message = "Goodbye {} !. {}".format(user_name, message())
+            message = "Goodbye {} !. {}".format(user_name, get_message())
 
             detach(user)
             
