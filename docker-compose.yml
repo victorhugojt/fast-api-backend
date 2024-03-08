@@ -13,7 +13,7 @@ services:
       - OTEL_LOG_LEVEL=ERROR
 
   jaeger:
-    image: jaegertracing/all-in-one:1.55
+    image: jaegertracing/all-in-one:latest
     ports:
       - 16686:16686 # UI
       - 14250:14250
@@ -32,7 +32,7 @@ services:
       - 9090:9090 # UI
 
   collector:
-    image: otel/opentelemetry-collector
+    image: otel/opentelemetry-collector-contrib:latest
     volumes:
       - ./collector/collector.yaml:/etc/otel-collector-config.yaml
     command: [ "--config=/etc/otel-collector-config.yaml" ]
