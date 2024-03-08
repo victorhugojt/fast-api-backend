@@ -13,7 +13,7 @@ services:
       - OTEL_LOG_LEVEL=ERROR
 
   jaeger:
-    image: jaegertracing/all-in-one
+    image: jaegertracing/all-in-one:1.55
     ports:
       - 16686:16686 # UI
       - 14250:14250

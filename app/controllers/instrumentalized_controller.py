@@ -79,7 +79,7 @@ def message():
     return "have a good weekend"
 
 
-router.get("/goodbye", status_code=200)
+@router.get("/goodbye", status_code=200)
 async def goodbye():
     
     start_time = time.perf_counter()

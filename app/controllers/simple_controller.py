@@ -1,9 +1,8 @@
 from fastapi import APIRouter
-import os
 
 router = APIRouter()
 
 
-@router.get("/goodbye")
+@router.get("/basic")
 async def info():
     return {"chao !"}
