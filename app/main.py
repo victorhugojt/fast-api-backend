@@ -1,7 +1,7 @@
 import os
 from fastapi import FastAPI
 from app.controllers import refactor_controller
-from instrumentalization import traces
+from instrumentation import traces
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 app = FastAPI(title='fastAPI self training', version = '1.0.0', root_path = '')
