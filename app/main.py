@@ -1,6 +1,6 @@
 import os
 from fastapi import FastAPI
-from app.controllers import refactor_controller
+from app.controllers import greetings_controller, coins_controller
 from app.instrumentation import traces
 from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
@@ -10,4 +10,5 @@ tracer = traces.config('greeting-service', os.environ.get("MODE", "otlp-grpc"))
 
 FastAPIInstrumentor.instrument_app(app, tracer_provider=tracer)
 
-app.include_router(refactor_controller.router)
+app.include_router(greetings_controller.router)
+app.include_router(coins_controller)
