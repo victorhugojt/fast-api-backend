@@ -6,7 +6,7 @@ from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 app = FastAPI(title='fastAPI self training', version = '1.0.0', root_path = '')
 
-tracer = traces.config(app, 'greeting-service', os.environ.get("MODE", "otlp-grpc"))
+tracer = traces.config('greeting-service', os.environ.get("MODE", "otlp-grpc"))
 
 FastAPIInstrumentor.instrument_app(app, tracer_provider=tracer)
 
