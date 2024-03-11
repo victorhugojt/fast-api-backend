@@ -10,6 +10,8 @@ meter = metrics.get_meter(__name__)
 heads_count = meter.create_counter("heads_count")
 tails_count = meter.create_counter("tails_count")
 flip_count  = meter.create_counter("flip_count")
+hits_count  = meter.create_counter("hits_count")
+
 
 @router.get("/flip-coins", status_code=200)
 async def flip_coins(times=None):
@@ -30,6 +32,11 @@ async def flip_coins(times=None):
     heads_count.add(heads)
     tails_count.add(tails)
     flip_count.add(times_int)
+    hits_count.add(tails + heads)
+
+    print('heads: ', heads)
+    print('tails: ', tails)
+    print('hits_count: ', tails + heads )
 
     return {
         "heads": heads,
