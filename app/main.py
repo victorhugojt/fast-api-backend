@@ -1,6 +1,13 @@
+import os
 from fastapi import FastAPI
-from app.controllers import complex_controller# instrumentalized_controller, simple_controller
+from app.controllers import refactor_controller
+from instrumentalization import traces
+from opentelemetry.instrumentation.fastapi import FastAPIInstrumentor
 
 app = FastAPI(title='fastAPI self training', version = '1.0.0', root_path = '')
 
-app.include_router(complex_controller.router)
+tracer = traces.config(app, 'greeting-service', os.environ.get("MODE", "otlp-grpc"))
+
+FastAPIInstrumentor.instrument_app(app, tracer_provider=tracer)
+
+app.include_router(refactor_controller.router)
