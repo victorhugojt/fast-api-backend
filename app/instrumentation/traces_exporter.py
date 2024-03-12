@@ -11,8 +11,8 @@ from opentelemetry.sdk.trace.export import BatchSpanProcessor
 from opentelemetry.sdk.resources import SERVICE_NAME, Resource
 
 
-OTLP_GRPC_ENDPOINT = "collector:4317"
-OTLP_HTTP_ENDPOINT = "http://collector:4318/v1/traces"
+OTLP_GRPC_ENDPOINT = os.environ.get('OTLP_TRACES_GRPC_ENDPOINT')
+OTLP_HTTP_ENDPOINT = os.environ.get('OTLP_TRACES_HTTP_ENDPOINT')
 
 
 def set_resource(service_name):
@@ -33,7 +33,6 @@ def config(service_name, mode) -> None:
             BatchSpanProcessor(OTLPSpanExporterHTTP(endpoint=OTLP_HTTP_ENDPOINT))
         )
     else:
-        # default otlp-grpc
         tracer.add_span_processor(
             BatchSpanProcessor(
                 OTLPSpanExporterGRPC(endpoint=OTLP_GRPC_ENDPOINT, insecure=True)

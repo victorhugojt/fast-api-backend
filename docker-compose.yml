@@ -12,6 +12,9 @@ services:
       - NAME="VictorHJ"
       - OTEL_LOG_LEVEL=ERROR
       - MODE=otlp-grpc
+      - OTLP_TRACES_GRPC_ENDPOINT=collector:4317
+      - OTLP_TRACES_HTTP_ENDPOINT=http://collector:4318/v1/traces
+      - OTLP_METRICS_HTTP_ENDPOINT=http://collector:4318/v1/metrics
 
   jaeger:
     image: jaegertracing/all-in-one:latest
