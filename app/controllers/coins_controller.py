@@ -34,10 +34,6 @@ async def flip_coins(times=None):
     flip_count.add(times_int)
     hits_count.add(tails + heads)
 
-    print('heads: ', heads)
-    print('tails: ', tails)
-    print('hits_count: ', tails + heads )
-
     return {
         "heads": heads,
         "tails": tails,
