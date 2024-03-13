@@ -76,3 +76,7 @@ opentelemetry-instrument --traces_exporter otlp --metrics_exporter none --export
 ```
 
 Prometheus UI ===> <http://localhost:9090>
+
+##### Load (siege)
+
+<https://manpages.ubuntu.com/manpages/jammy/man1/siege.1.html>

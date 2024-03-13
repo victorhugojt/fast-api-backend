@@ -44,7 +44,11 @@ async def cpu_task():
 @router.get("/random_status")
 async def random_status(response: Response):
     response.status_code = random.choice([200, 200, 300, 400, 500])
-    return {"path": "/random_status"}
+    message = { 200: 'Very Good My Friend :-) ', 
+                300: 'Don not worry, I will redirect you ;-) ', 
+                400: 'Your bad. please verify your request :-( ',
+                500: 'We have a problem here. please be patient, we are working on it :-O ' }
+    return {"message": message.get(response.status_code)}
 
 
 @router.get("/random_sleep")
