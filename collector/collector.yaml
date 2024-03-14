@@ -17,13 +17,19 @@ connectors:
 
 processors:
   batch:
+  resource:
+    attributes:
+    - key: key.performance.hub
+      value: 2024
+      action: insert
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
+      processors: [batch, resource]
       exporters: [otlp]
     metrics:
       receivers: [otlp]
+      processors: [batch]
       exporters: [prometheus]
