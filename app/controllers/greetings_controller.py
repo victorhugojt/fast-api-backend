@@ -30,7 +30,7 @@ async def read_item(item_id: int, q: Optional[str] = None):
 
 @router.get("/io_task")
 async def io_task():
-    time.sleep(1)
+    time.sleep(0.6)
     return "IO bound task finish!"
 
 
