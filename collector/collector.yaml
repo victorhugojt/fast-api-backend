@@ -19,6 +19,9 @@ processors:
     - key: key.performance.hub
       value: 2024
       action: insert
+    - key: key.purpose
+      value: otel_demostration
+      action: insert
   
   tail_sampling:
     decision_wait: 10s
@@ -42,8 +45,8 @@ service:
   pipelines:
     traces:
       receivers: [otlp]
-      processors: [batch]
-      # processors: [batch, resource]
+      # processors: [batch]
+      processors: [batch, resource]
       # processors: [batch, resource, tail_sampling]
       exporters: [otlp]
     metrics:
