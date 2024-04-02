@@ -9,6 +9,6 @@ do
     siege -c 2 -r 10 http://localhost:80/hi
     siege -c 2 -r 10 http://localhost:80/error_test
     siege -c 2 -r 10 http://localhost:80/random_status
-    siege -c 2 -r 4  http://localhost:80/io_task
-    sleep 5
+    siege -c 2 -r 2  http://localhost:80/io_task
+    sleep 3
 done

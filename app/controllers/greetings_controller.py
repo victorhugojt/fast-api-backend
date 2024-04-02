@@ -30,8 +30,9 @@ async def read_item(item_id: int, q: Optional[str] = None):
 
 @router.get("/io_task")
 async def io_task():
-    time.sleep(0.6)
-    return "IO bound task finish!"
+    with tracer.start_as_current_span("Greeting Request", attributes={ "Requires environment var": "NAME", "library":"FastAPI" } ):
+        time.sleep(0.6)
+        return "IO bound task finish!"
 
 
 @router.get("/cpu_task")
@@ -74,8 +75,11 @@ async def greeting():
     with tracer.start_as_current_span("Greeting Request", attributes={ "requires env": "HOME", "library":"FastAPI" } ):
         parent_context = baggage.set_baggage("position", "10")
         name = os.environ['NAME']
-        with tracer.start_as_current_span("Child Span", context=parent_context):
+        with tracer.start_as_current_span("Child Span", context=parent_context ) as child_span:
             child_context = baggage.set_baggage("matches", "467")
+            current_span = trace.get_current_span()
+            current_span.set_attribute("child att key", "formated message")
+            
             message = "Hello {} !. {}".format(name, another_thing_to_do())
            
             detach(user)
