@@ -78,7 +78,7 @@ async def greeting():
         with tracer.start_as_current_span("Child Span", context=parent_context ) as child_span:
             child_context = baggage.set_baggage("matches", "467")
             current_span = trace.get_current_span()
-            current_span.set_attribute("child att key", "formated message")
+            current_span.set_attribute("Child_Attribute", "Formated Message :-)")
             
             message = "Hello {} !. {}".format(name, another_thing_to_do())
            
