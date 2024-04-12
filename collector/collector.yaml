@@ -2,18 +2,57 @@ receivers:
   otlp:
     protocols:
       grpc:
-      http: 
+      http:
+  
+  hostmetrics:
+    collection_interval: 20s
+    scrapers:
+      cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+      load:
+      memory:
+        metrics:
+          system.memory.utilization:
+            enabled: true
+      disk:
+      filesystem:
+        metrics:
+          system.filesystem.utilization:
+            enabled: true
+      network:
+      paging:
+        metrics:
+          system.paging.utilization:
+            enabled: true
+      processes:
+      process:
+        metrics:
+          process.cpu.utilization:
+            enabled: true
+          process.cpu.time:
+            enabled: false
+
+  filelog:
+    include:
+      - /var/log/dummy_1.log
+      - /var/log/dummy_2.log
 
 exporters:
   otlp:
     endpoint: jaeger:4317
     tls:
       insecure: true
+  
   prometheus:
     endpoint: "0.0.0.0:8889"
+  
+  logging:
 
 processors:
   batch:
+  
   resource:
     attributes:
     - key: key.performance.hub
@@ -21,6 +60,9 @@ processors:
       action: insert
     - key: key.purpose
       value: otel_demostration
+      action: insert
+    - key: host.id
+      value: localhost
       action: insert
   
   tail_sampling:
@@ -41,16 +83,41 @@ processors:
           }
       ]
 
+  resourcedetection:
+    detectors: [env, system]
+    system:
+      hostname_sources: ["os"]
+      resource_attributes:
+        host.id:
+          enabled: true
+
+  transform/truncate:
+    trace_statements:
+      - context: span
+        statements:
+          - truncate_all(attributes, 4095)
+          - truncate_all(resource.attributes, 4095)
+    log_statements:
+      - context: log
+        statements:
+          - truncate_all(attributes, 4095)
+          - truncate_all(resource.attributes, 4095)
+
 service:
   pipelines:
     traces:
       receivers: [otlp]
       # processors: [batch]
       # processors: [batch, resource]
-      processors: [batch, resource, tail_sampling]
-      exporters: [otlp]
+      processors: [batch, resource, tail_sampling, resourcedetection]
+      exporters: [otlp,logging]
+    
     metrics:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [prometheus]
+      receivers: [otlp, hostmetrics]
+      processors: [batch, resourcedetection]
+      exporters: [prometheus, logging]
 
+    logs:
+      receivers: [otlp, filelog]
+      processors: [transform/truncate, resourcedetection, batch]
+      exporters: [logging, otlp]
