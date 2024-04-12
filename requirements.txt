@@ -1,6 +1,7 @@
-fastapi>=0.61,<0.70.0
-uvicorn>=0.11.5,<0.12.0
-opentelemetry-distro==0.41b0
-opentelemetry-exporter-otlp-proto-grpc
-opentelemetry-instrumentation-fastapi
-prometheus-client
+httpx==0.26.0
+fastapi==0.108.0
+uvicorn==0.25.0
+opentelemetry-instrumentation-fastapi==0.43b0
+opentelemetry-exporter-otlp==1.22.0
+opentelemetry-api==1.22.0
+opentelemetry-sdk==1.22.0
