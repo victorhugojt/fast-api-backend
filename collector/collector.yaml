@@ -5,7 +5,8 @@ receivers:
       http:
   
   hostmetrics:
-    collection_interval: 20s
+    collection_interval: 5s
+    root_path: /hostfs
     scrapers:
       cpu:
         metrics:
@@ -17,27 +18,22 @@ receivers:
           system.memory.utilization:
             enabled: true
       disk:
-      filesystem:
-        metrics:
-          system.filesystem.utilization:
-            enabled: true
       network:
       paging:
         metrics:
           system.paging.utilization:
             enabled: true
-      processes:
       process:
+        mute_process_exe_error: true
+        mute_process_name_error: true
+        mute_process_io_error: true
+        mute_process_user_error: true
         metrics:
           process.cpu.utilization:
             enabled: true
           process.cpu.time:
             enabled: false
 
-  filelog:
-    include:
-      - /var/log/dummy_1.log
-      - /var/log/dummy_2.log
 
 exporters:
   otlp:
@@ -48,7 +44,6 @@ exporters:
   prometheus:
     endpoint: "0.0.0.0:8889"
   
-  logging:
 
 processors:
   batch:
@@ -91,33 +86,17 @@ processors:
         host.id:
           enabled: true
 
-  transform/truncate:
-    trace_statements:
-      - context: span
-        statements:
-          - truncate_all(attributes, 4095)
-          - truncate_all(resource.attributes, 4095)
-    log_statements:
-      - context: log
-        statements:
-          - truncate_all(attributes, 4095)
-          - truncate_all(resource.attributes, 4095)
 
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      # processors: [batch]
+      processors: [batch]
       # processors: [batch, resource]
-      processors: [batch, resource, tail_sampling, resourcedetection]
-      exporters: [otlp,logging]
+      # processors: [batch, resource, tail_sampling, resourcedetection]
+      exporters: [otlp]
     
     metrics:
       receivers: [otlp, hostmetrics]
       processors: [batch, resourcedetection]
-      exporters: [prometheus, logging]
-
-    logs:
-      receivers: [otlp, filelog]
-      processors: [transform/truncate, resourcedetection, batch]
-      exporters: [logging, otlp]
+      exporters: [prometheus]

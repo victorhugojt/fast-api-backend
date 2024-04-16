@@ -15,6 +15,7 @@ services:
       - OTLP_TRACES_GRPC_ENDPOINT=collector:4317
       - OTLP_TRACES_HTTP_ENDPOINT=http://collector:4318/v1/traces
       - OTLP_METRICS_HTTP_ENDPOINT=http://collector:4318/v1/metrics
+      - HOST_PROC=/hostfs/proc
 
   jaeger:
     image: jaegertracing/all-in-one:latest
@@ -42,6 +43,7 @@ services:
     image: otel/opentelemetry-collector-contrib:0.91.0
     volumes:
       - ./collector/collector.yaml:/etc/otel-collector-config.yaml
+      - /proc:/hostfs/proc
     command: [ "--config=/etc/otel-collector-config.yaml" ]
     ports:
       - "8889:8889" # Prometheus exporter metrics
