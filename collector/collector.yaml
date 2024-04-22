@@ -24,6 +24,7 @@ receivers:
           system.paging.utilization:
             enabled: true
       process:
+        # erros in mac environment and non executable process
         mute_process_exe_error: true
         mute_process_name_error: true
         mute_process_io_error: true
@@ -97,6 +98,9 @@ service:
       exporters: [otlp]
     
     metrics:
-      receivers: [otlp, hostmetrics]
-      processors: [batch, resourcedetection]
+      receivers: [otlp]
+      processors: [batch]
+      # dissabled due to a to much overload in a local env: needs to be tunnend or used a persistence DB
+      # receivers: [otlp, hostmetrics]
+      # processors: [batch, resourcedetection]
       exporters: [prometheus]
