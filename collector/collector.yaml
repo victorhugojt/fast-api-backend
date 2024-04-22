@@ -2,18 +2,53 @@ receivers:
   otlp:
     protocols:
       grpc:
-      http: 
+      http:
+  
+  hostmetrics:
+    collection_interval: 5s
+    root_path: /hostfs
+    scrapers:
+      cpu:
+        metrics:
+          system.cpu.utilization:
+            enabled: true
+      load:
+      memory:
+        metrics:
+          system.memory.utilization:
+            enabled: true
+      disk:
+      network:
+      paging:
+        metrics:
+          system.paging.utilization:
+            enabled: true
+      process:
+        # erros in mac environment and non executable process
+        mute_process_exe_error: true
+        mute_process_name_error: true
+        mute_process_io_error: true
+        mute_process_user_error: true
+        metrics:
+          process.cpu.utilization:
+            enabled: true
+          process.cpu.time:
+            enabled: false
+
 
 exporters:
   otlp:
     endpoint: jaeger:4317
     tls:
       insecure: true
+  
   prometheus:
     endpoint: "0.0.0.0:8889"
+  
 
 processors:
   batch:
+  
   resource:
     attributes:
     - key: key.performance.hub
@@ -21,6 +56,9 @@ processors:
       action: insert
     - key: key.purpose
       value: otel_demostration
+      action: insert
+    - key: host.id
+      value: localhost
       action: insert
   
   tail_sampling:
@@ -41,16 +79,28 @@ processors:
           }
       ]
 
+  resourcedetection:
+    detectors: [env, system]
+    system:
+      hostname_sources: ["os"]
+      resource_attributes:
+        host.id:
+          enabled: true
+
+
 service:
   pipelines:
     traces:
       receivers: [otlp]
-      # processors: [batch]
+      processors: [batch]
       # processors: [batch, resource]
-      processors: [batch, resource, tail_sampling]
+      # processors: [batch, resource, tail_sampling, resourcedetection]
       exporters: [otlp]
+    
     metrics:
       receivers: [otlp]
       processors: [batch]
+      # dissabled due to a to much overload in a local env: needs to be tunnend or used a persistence DB
+      # receivers: [otlp, hostmetrics]
+      # processors: [batch, resourcedetection]
       exporters: [prometheus]
-
