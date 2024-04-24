@@ -81,8 +81,8 @@ def another_thing_to_do():
 
 
 @router.get("/hi", status_code=200)
-async def greeting(response: Response):
-    logger.info("Hit hi request, status: ", response.status_code)
+async def greeting():
+    logger.info("Hit hi request to test !!!")
     user = attach(
         baggage.set_baggage("user.id", "Pibe Valderrama")
     )
@@ -97,6 +97,8 @@ async def greeting(response: Response):
             message = "Hello {} !. {}".format(name, another_thing_to_do())
            
             detach(user)
+
+            logger.debug("child spans ok !!!! ")
 
             return {"message": message}
         

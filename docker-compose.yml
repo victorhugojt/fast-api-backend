@@ -8,6 +8,8 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 80:80
+    volumes:
+      - .:/code
     environment:
       - NAME="VictorHJ"
       - OTEL_LOG_LEVEL=ERROR
