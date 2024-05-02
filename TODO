@@ -1,10 +1,15 @@
 
 Part 2
 
+Host metrics
 Logs Integration
-Host and Persistence metrics
+Persistence (Cassandra)
 
 Part 3
 
-Custom FilterSpanProcessors
 Clean code (Decorators)
+Custom FilterSpanProcessors
+
+Part 4
+
+Docker and K8

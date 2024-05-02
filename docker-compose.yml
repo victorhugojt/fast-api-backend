@@ -8,6 +8,8 @@ services:
       dockerfile: ./Dockerfile
     ports:
       - 80:80
+    volumes:
+      - .:/code
     environment:
       - NAME="VictorHJ"
       - OTEL_LOG_LEVEL=ERROR
@@ -44,6 +46,7 @@ services:
     volumes:
       - ./collector/collector.yaml:/etc/otel-collector-config.yaml
       - /proc:/hostfs/proc
+      - .:/code
     command: [ "--config=/etc/otel-collector-config.yaml" ]
     ports:
       - "8889:8889" # Prometheus exporter metrics

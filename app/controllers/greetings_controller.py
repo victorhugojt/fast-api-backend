@@ -1,11 +1,13 @@
 import random
 import time
 import os
+import logging
 from typing import Optional
 from app.instrumentation import metrics_exporter
 from fastapi import Response, APIRouter
 from opentelemetry import trace, baggage
 from opentelemetry.context import attach, detach
+from pythonjsonlogger import jsonlogger
 
 
 metrics = metrics_exporter.config('greetings-service')
@@ -15,6 +17,17 @@ router = APIRouter()
 tracer = trace.get_tracer(__name__)
 http_requests_counter = meter.create_counter("http_requests_counter")
 http_rt = meter.create_histogram("http_rt")
+
+logger = logging.getLogger()
+logger.setLevel(logging.DEBUG)
+log_file_path = logging.FileHandler('greeting-service.log')
+log_file_path.setLevel(logging.DEBUG)
+formatter = jsonlogger.JsonFormatter(
+    fmt='%(asctime)s %(levelname)s %(message)s',
+    datefmt='%Y-%m-%dT%H:%M:%S'
+)
+log_file_path.setFormatter(formatter)
+logger.addHandler(log_file_path)
 
 
 
@@ -45,6 +58,7 @@ async def cpu_task():
 @router.get("/random_status")
 async def random_status(response: Response):
     response.status_code = random.choice([200, 200, 300, 400, 500])
+    logger.info("Hit random status request to test, status : {}".format(str(response.status_code)))
     message = { 200: 'Very Good My Friend :-) ', 
                 300: 'Don not worry, I will redirect you ;-) ', 
                 400: 'Your bad. please verify your request :-( ',
@@ -60,6 +74,7 @@ async def random_sleep(response: Response):
 
 @router.get("/error_test")
 async def error_test(response: Response):
+    logger.error("Induced Error !!!!!!")
     raise ValueError("value error")
 
 
@@ -69,6 +84,7 @@ def another_thing_to_do():
 
 @router.get("/hi", status_code=200)
 async def greeting():
+    logger.info("Hit hi request to test !!!")
     user = attach(
         baggage.set_baggage("user.id", "Pibe Valderrama")
     )
@@ -84,12 +100,14 @@ async def greeting():
            
             detach(user)
 
+            logger.debug("child spans ok !!!! ")
+
             return {"message": message}
         
     
 @router.get("/goodbye", status_code=200)
 async def goodbye():
-    
+    logger.info("Hit goodbye request to test !!!")
     start_time = time.perf_counter()
     user_name = os.environ['NAME']
     
@@ -107,6 +125,7 @@ async def goodbye():
             http_requests_counter.add(1)
             response_time = time.perf_counter() - start_time
             http_rt.record(response_time)
+            logger.info("Hit hi request to test Response Time : ", str(response_time))
             
             detach(user)
 

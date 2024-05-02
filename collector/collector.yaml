@@ -24,7 +24,7 @@ receivers:
           system.paging.utilization:
             enabled: true
       process:
-        # erros in mac environment and non executable process
+        # erros in mac environment maybe due to non executable process
         mute_process_exe_error: true
         mute_process_name_error: true
         mute_process_io_error: true
@@ -35,6 +35,16 @@ receivers:
           process.cpu.time:
             enabled: false
 
+  filelog:
+    include: [ /code/*.log ]
+    start_at: beginning
+    operators:
+    - type: json_parser
+      timestamp:
+        parse_from: attributes.asctime
+        layout: '%Y-%m-%dT%H:%M:%S'
+      severity:
+        parse_from: attributes.levelname
 
 exporters:
   otlp:
@@ -44,6 +54,9 @@ exporters:
   
   prometheus:
     endpoint: "0.0.0.0:8889"
+
+  debug:
+    verbosity: detailed
   
 
 processors:
@@ -104,3 +117,7 @@ service:
       # receivers: [otlp, hostmetrics]
       # processors: [batch, resourcedetection]
       exporters: [prometheus]
+
+    logs:
+      receivers: [filelog]
+      exporters: [debug]
