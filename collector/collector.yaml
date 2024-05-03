@@ -119,5 +119,6 @@ service:
       exporters: [prometheus]
 
     logs:
-      receivers: [filelog]
+      # receivers: [filelog] for logs from Json
+      receivers: [otlp]
       exporters: [debug]

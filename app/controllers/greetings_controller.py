@@ -3,11 +3,10 @@ import time
 import os
 import logging
 from typing import Optional
-from app.instrumentation import metrics_exporter
+from app.instrumentation import metrics_exporter, logs_exporter
 from fastapi import Response, APIRouter
 from opentelemetry import trace, baggage
 from opentelemetry.context import attach, detach
-from pythonjsonlogger import jsonlogger
 
 
 metrics = metrics_exporter.config('greetings-service')
@@ -18,17 +17,9 @@ tracer = trace.get_tracer(__name__)
 http_requests_counter = meter.create_counter("http_requests_counter")
 http_rt = meter.create_histogram("http_rt")
 
-logger = logging.getLogger()
+logger_provider = logs_exporter.config('greetings-service')
+logger = logging.getLogger().addHandler(logs_exporter.set_handler(logging.DEBUG, logger_provider))
 logger.setLevel(logging.DEBUG)
-log_file_path = logging.FileHandler('greeting-service.log')
-log_file_path.setLevel(logging.DEBUG)
-formatter = jsonlogger.JsonFormatter(
-    fmt='%(asctime)s %(levelname)s %(message)s',
-    datefmt='%Y-%m-%dT%H:%M:%S'
-)
-log_file_path.setFormatter(formatter)
-logger.addHandler(log_file_path)
-
 
 
 @router.get("/")
