@@ -18,8 +18,11 @@ http_requests_counter = meter.create_counter("http_requests_counter")
 http_rt = meter.create_histogram("http_rt")
 
 logger_provider = logs_exporter.config('greetings-service')
-logger = logging.getLogger().addHandler(logs_exporter.set_handler(logging.DEBUG, logger_provider))
-logger.setLevel(logging.DEBUG)
+
+handler = logs_exporter.get_handler(logging.DEBUG, logger_provider)
+logging.getLogger().addHandler(handler)
+logger = logging.getLogger("logger.main")
+logger.setLevel(logging.INFO)
 
 
 @router.get("/")
