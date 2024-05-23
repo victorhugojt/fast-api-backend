@@ -47,7 +47,7 @@ receivers:
         parse_from: attributes.levelname
 
 exporters:
-  otlp:
+  otlp/traces:
     endpoint: jaeger:4317
     tls:
       insecure: true
@@ -108,7 +108,7 @@ service:
       processors: [batch]
       # processors: [batch, resource]
       # processors: [batch, resource, tail_sampling, resourcedetection]
-      exporters: [otlp]
+      exporters: [otlp/traces]
     
     metrics:
       receivers: [otlp]
@@ -119,5 +119,6 @@ service:
       exporters: [prometheus]
 
     logs:
-      receivers: [filelog]
+      # receivers: [filelog] for logs from Json
+      receivers: [otlp]
       exporters: [debug]

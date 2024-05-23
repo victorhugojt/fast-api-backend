@@ -1,15 +1,19 @@
 
 Part 2
 
-Host metrics
-Logs Integration
-Persistence (Cassandra)
+Host metrics [Done]
+Logs Integration With Collector [Done]
+Logs Exporter Grafana
 
 Part 3
 
-Clean code (Decorators)
+Clean Code (Decorators)
 Custom FilterSpanProcessors
 
 Part 4
 
-Docker and K8
+Postgresql + Redis
+
+Part 5
+
+Docker + K8
