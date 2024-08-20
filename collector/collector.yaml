@@ -58,6 +58,23 @@ exporters:
   debug:
     verbosity: detailed
   
+  loki:
+    endpoint: https://logs-prod-006.grafana.net
+    labels:
+      attributes:
+        key: "loki_key"
+    tls:
+      insecure: true
+    auth:
+      authenticator: basicauth/logs
+          
+
+extensions:
+  basicauth/logs:
+    client_auth:
+      username: 897952
+      password: configured
+
 
 processors:
   batch:
@@ -102,7 +119,10 @@ processors:
 
 
 service:
+  extensions: [basicauth/logs]
+  
   pipelines:
+
     traces:
       receivers: [otlp]
       processors: [batch]
@@ -121,4 +141,4 @@ service:
     logs:
       # receivers: [filelog] for logs from Json
       receivers: [otlp]
-      exporters: [debug]
+      exporters: [loki]
