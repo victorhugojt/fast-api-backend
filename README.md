@@ -4,13 +4,13 @@
 
 ```sh
 virtualenv venv
-virtualenv -p '/Library/Frameworks/Python.framework/Versions/3.10/bin/python3.10' python-3.10
+virtualenv -p '/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11' python-3.11
 ```
 
 ### Mac
 
 ```sh
-source python-3.10/bin/activate
+source python-3.11/bin/activate
 ```
 
 ###  Running Locally for Dev

@@ -1,124 +1,37 @@
+exporters:
+  otlp/dash0:
+    endpoint: ingress.eu-west-1.aws.dash0.com:4317
+    headers:
+      Authorization: Bearer auth_N18QEesXoMeZ3Z9IiYY7rwKcBsw3J06B
+processors:
+  batch: {}
 receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: localhost:4317
       http:
-  
-  hostmetrics:
-    collection_interval: 5s
-    root_path: /hostfs
-    scrapers:
-      cpu:
-        metrics:
-          system.cpu.utilization:
-            enabled: true
-      load:
-      memory:
-        metrics:
-          system.memory.utilization:
-            enabled: true
-      disk:
-      network:
-      paging:
-        metrics:
-          system.paging.utilization:
-            enabled: true
-      process:
-        # erros in mac environment maybe due to non executable process
-        mute_process_exe_error: true
-        mute_process_name_error: true
-        mute_process_io_error: true
-        mute_process_user_error: true
-        metrics:
-          process.cpu.utilization:
-            enabled: true
-          process.cpu.time:
-            enabled: false
-
-  filelog:
-    include: [ /code/*.log ]
-    start_at: beginning
-    operators:
-    - type: json_parser
-      timestamp:
-        parse_from: attributes.asctime
-        layout: '%Y-%m-%dT%H:%M:%S'
-      severity:
-        parse_from: attributes.levelname
-
-exporters:
-  otlp/traces:
-    endpoint: jaeger:4317
-    tls:
-      insecure: true
-  
-  prometheus:
-    endpoint: "0.0.0.0:8889"
-
-  debug:
-    verbosity: detailed
-  
-
-processors:
-  batch:
-  
-  resource:
-    attributes:
-    - key: key.performance.hub
-      value: 2024
-      action: insert
-    - key: key.purpose
-      value: otel_demostration
-      action: insert
-    - key: host.id
-      value: localhost
-      action: insert
-  
-  tail_sampling:
-    decision_wait: 10s
-    num_traces: 100
-    expected_new_traces_per_sec: 10
-    policies:
-      [
-          {
-            name: latency_threshold_500_ms_policy,
-            type: latency,
-            latency: {threshold_ms: 500, upper_threshold_ms: 1000}
-          },
-          {
-            name: http_server_errors_policy,
-            type: numeric_attribute,
-            numeric_attribute: {key: http.status_code, min_value: 500, max_value: 502}
-          }
-      ]
-
-  resourcedetection:
-    detectors: [env, system]
-    system:
-      hostname_sources: ["os"]
-      resource_attributes:
-        host.id:
-          enabled: true
-
-
+        endpoint: localhost:4318
 service:
   pipelines:
-    traces:
-      receivers: [otlp]
-      processors: [batch]
-      # processors: [batch, resource]
-      # processors: [batch, resource, tail_sampling, resourcedetection]
-      exporters: [otlp/traces]
-    
-    metrics:
-      receivers: [otlp]
-      processors: [batch]
-      # dissabled due to a to much overload in a local env: needs to be tunnend or used a persistence DB
-      # receivers: [otlp, hostmetrics]
-      # processors: [batch, resourcedetection]
-      exporters: [prometheus]
-
     logs:
-      # receivers: [filelog] for logs from Json
-      receivers: [otlp]
-      exporters: [debug]
+      exporters:
+        - otlp/dash0
+      processors:
+        - batch
+      receivers:
+        - otlp
+    metrics:
+      exporters:
+        - otlp/dash0
+      processors:
+        - batch
+      receivers:
+        - otlp
+    traces:
+      exporters:
+        - otlp/dash0
+      processors:
+        - batch
+      receivers:
+        - otlp
