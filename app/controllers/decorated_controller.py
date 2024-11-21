@@ -7,6 +7,6 @@ tracer = trace.get_tracer(__name__)
 
 
 @router.get("/thanks")
-@span(tracer, "Greeting Request", { "Requires environment var": "NAME", "library":"FastAPI", "pattern":"decorated" })
+@span(tracer, "Greetings Request", { "Requires environment var": "NAME", "library":"FastAPI", "pattern":"decorated" })
 def info():
     return 'You are welcome !!!!!!! '

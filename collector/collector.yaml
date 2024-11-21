@@ -1,4 +1,10 @@
 exporters:
+  debug/metrics:
+    verbosity: detailed
+  debug/traces:
+    verbosity: detailed
+  debug/logs:
+    verbosity: detailed
   otlp/dash0:
     endpoint: ingress.eu-west-1.aws.dash0.com:4317
     headers:
@@ -10,12 +16,13 @@ receivers:
     protocols:
       grpc:
       http:
-      
+
 service:
   pipelines:
     logs:
       exporters:
         - otlp/dash0
+        # - debug/logs
       processors:
         - batch
       receivers:
@@ -23,6 +30,7 @@ service:
     metrics:
       exporters:
         - otlp/dash0
+        # - debug/metrics
       processors:
         - batch
       receivers:
@@ -30,6 +38,7 @@ service:
     traces:
       exporters:
         - otlp/dash0
+        # - debug/traces
       processors:
         - batch
       receivers:

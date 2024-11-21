@@ -72,7 +72,7 @@ Jaeger UI ===> <http://localhost:16686>
 ####  Running Locally for Dev with Otel (works!!)
 
 ```sh
-opentelemetry-instrument --traces_exporter otlp --metrics_exporter none --exporter_otlp_endpoint http://localhost:4317 --service_name greeting-service uvicorn app.main:app
+opentelemetry-instrument --traces_exporter otlp --metrics_exporter none --exporter_otlp_endpoint http://localhost:4317 --service_name greetings-service uvicorn app.main:app
 ```
 
 Prometheus UI ===> <http://localhost:9090>

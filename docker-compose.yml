@@ -17,9 +17,8 @@ services:
       - OTLP_TRACES_HTTP_ENDPOINT=http://collector:4318/v1/traces
       - OTLP_METRICS_HTTP_ENDPOINT=http://collector:4318/v1/metrics
       - HOST_PROC=/hostfs/proc
-      - OTEL_EXPORTER_OTLP_ENDPOINT=ingress.eu-west-1.aws.dash0.com:4317
-      - OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer auth_N18QEesXoMeZ3Z9IiYY7rwKcBsw3J06B"
-      - OTEL_SERVICE_NAME="greeting-service"
+      - OTEL_EXPORTER_OTLP_ENDPOINT=collector:4317
+      - OTEL_SERVICE_NAME="greetings-service"
 
 
   collector:

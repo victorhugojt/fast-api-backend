@@ -37,7 +37,7 @@ async def read_item(item_id: int, q: Optional[str] = None):
 
 @router.get("/io_task")
 async def io_task():
-    with tracer.start_as_current_span("Greeting Request", attributes={ "Requires environment var": "NAME", "library":"FastAPI" } ):
+    with tracer.start_as_current_span("Greetings Request", attributes={ "Requires environment var": "NAME", "library":"FastAPI" } ):
         time.sleep(0.6)
         return "IO bound task finish!"
 
@@ -82,7 +82,7 @@ async def greeting():
     user = attach(
         baggage.set_baggage("user.id", "Pibe Valderrama")
     )
-    with tracer.start_as_current_span("Greeting Request", attributes={ "requires env": "HOME", "library":"FastAPI" } ):
+    with tracer.start_as_current_span("Greetings Request", attributes={ "requires env": "HOME", "library":"FastAPI" } ):
         parent_context = baggage.set_baggage("position", "10")
         name = os.environ['NAME']
         with tracer.start_as_current_span("Child Span", context=parent_context ) as child_span:
@@ -108,7 +108,7 @@ async def goodbye():
     user = attach(
         baggage.set_baggage("user.name", user_name)
     )
-    with tracer.start_as_current_span("Greeting Request", attributes={ "Requires environment var": "NAME", "library":"FastAPI" } ):
+    with tracer.start_as_current_span("Greetings Request", attributes={ "Requires environment var": "NAME", "library":"FastAPI" } ):
         parent_context = baggage.set_baggage("user.id", "10002494")
         
         with tracer.start_as_current_span("Child Span", context=parent_context):
