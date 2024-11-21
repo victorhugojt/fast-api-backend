@@ -1,3 +1,5 @@
+version: '3'
+
 services:
   greetings-backend:
     container_name: greetings-backend
@@ -10,17 +12,35 @@ services:
       - .:/code
     environment:
       - NAME="VictorHJ"
-      - OTEL_LOG_LEVEL=DEBUG
+      - OTEL_LOG_LEVEL=ERROR
       - MODE=otlp-grpc
       - OTLP_LOGS_GRPC_ENDPOINT=collector:4317
       - OTLP_TRACES_GRPC_ENDPOINT=collector:4317
       - OTLP_TRACES_HTTP_ENDPOINT=http://collector:4318/v1/traces
       - OTLP_METRICS_HTTP_ENDPOINT=http://collector:4318/v1/metrics
       - HOST_PROC=/hostfs/proc
-      - OTEL_EXPORTER_OTLP_ENDPOINT=ingress.eu-west-1.aws.dash0.com:4317
-      - OTEL_EXPORTER_OTLP_HEADERS="Authorization=Bearer auth_N18QEesXoMeZ3Z9IiYY7rwKcBsw3J06B"
-      - OTEL_SERVICE_NAME="greeting-service"
 
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - 16686:16686 # UI
+      - 16687:16687
+      - "4317" # accept OpenTelemetry Protocol (OTLP) over gRPC
+      - "4318" # accept OpenTelemetry Protocol (OTLP) over HTTP
+    command:
+      - "--collector.otlp.enabled=true"
+    environment:
+      - LOG_LEVEL=debug
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: always
+    volumes:
+      - "./prometheus.yml:/etc/prometheus/prometheus.yml"
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    ports:
+      - 9090:9090 # UI
 
   collector:
     image: otel/opentelemetry-collector-contrib:0.91.0
@@ -30,5 +50,9 @@ services:
       - .:/code
     command: [ "--config=/etc/otel-collector-config.yaml" ]
     ports:
+      - "8889:8889" # Prometheus exporter metrics
       - "4317:4317" # OTLP gRPC receiver
       - "4318:4318" # OTLP http receiver
+    depends_on:
+      - jaeger
+      - prometheus
