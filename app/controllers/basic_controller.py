@@ -5,4 +5,4 @@ router = APIRouter()
 
 @router.get("/basic")
 async def info():
-    return {"chao !"}
+    return {"chao pescao !"}

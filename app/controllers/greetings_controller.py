@@ -27,17 +27,20 @@ logger.setLevel(logging.INFO)
 
 @router.get("/")
 async def read_root():
+    logger.info("Hello World Call")
     return {"Hello": "World"}
 
 
 @router.get("/items/{item_id}")
 async def read_item(item_id: int, q: Optional[str] = None):
+    logger.info("Items Call")
     return {"item_id": item_id, "q": q}
 
 
 @router.get("/io_task")
 async def io_task():
     with tracer.start_as_current_span("Greetings Request", attributes={ "Requires environment var": "NAME", "library":"FastAPI" } ):
+        logger.info("io_task Call")
         time.sleep(0.6)
         return "IO bound task finish!"
 
@@ -46,6 +49,7 @@ async def io_task():
 async def cpu_task():
     for i in range(1000):
         _ = i * i * i
+    logger.info("cpu_task Call")
     return "CPU bound task finish!"
 
 
